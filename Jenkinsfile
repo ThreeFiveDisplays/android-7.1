@@ -52,32 +52,7 @@ node('docker && android-build') {
             '''
         }
 
-        withEnv([
-          "VERSION=$VERSION",
-          "CHANGES=$CHANGES",
-          "GITHUB_USER=$GITHUB_USER",
-          "GITHUB_REPO=$GITHUB_REPO"
-        ]) {
-          stage 'Freeze'
-          sh '''#!/bin/bash
-            # use -ve, otherwise we could leak GITHUB_TOKEN...
-            set -ve
-            shopt -s nullglob
-
-            export HOME=$WORKSPACE
-            export USER=jenkins
-
-            repo manifest -r -o manifest.xml
-
-            echo "{\\"message\\":\\"Add $VERSION changes\\", \\"committer\\":{\\"name\\":\\"Jenkins\\",\\"email\\":\\"jenkins@ayufan.eu\\"},\\"content\\":\\"$(echo "$CHANGES" | base64 -w 0)\\"}" | \
-              curl --fail -X PUT -H "Authorization: token $GITHUB_TOKEN" -d @- \
-              "https://api.github.com/repos/$GITHUB_USER/$GITHUB_REPO/contents/versions/$VERSION/CHANGES.md"
-
-            echo "{\\"message\\":\\"Add $VERSION manifest\\", \\"committer\\":{\\"name\\":\\"Jenkins\\",\\"email\\":\\"jenkins@ayufan.eu\\"},\\"content\\":\\"$(base64 -w 0 manifest.xml)\\"}" | \
-              curl --fail -X PUT -H "Authorization: token $GITHUB_TOKEN" -d @- \
-              "https://api.github.com/repos/$GITHUB_USER/$GITHUB_REPO/contents/versions/$VERSION/manifest.xml"
-          '''
-        }
+   
 
         withEnv([
           "VERSION=$VERSION",
@@ -209,50 +184,7 @@ node('docker && android-build') {
           }
         }
 
-        withEnv([
-          "VERSION=$VERSION",
-          "CHANGES=$CHANGES",
-          "PRERELEASE=$PRERELEASE",
-          "GITHUB_USER=$GITHUB_USER",
-          "GITHUB_REPO=$GITHUB_REPO"
-        ]) {
-          stage 'Release'
-          sh '''#!/bin/bash
-            set -xe
-            shopt -s nullglob
-
-            github-release release \
-                --tag "${VERSION}" \
-                --name "$VERSION: $BUILD_TAG" \
-                --description "${CHANGES}\n\n${BUILD_URL}" \
-                --draft
-
-            github-release upload \
-                --tag "${VERSION}" \
-                --name "manifest.xml" \
-                --file "manifest.xml"
-
-            for file in *.gz; do
-              github-release upload \
-                  --tag "${VERSION}" \
-                  --name "$(basename "$file")" \
-                  --file "$file"
-            done
-
-            if [[ "$PRERELEASE" == "true" ]]; then
-              github-release edit \
-                --tag "${VERSION}" \
-                --name "$VERSION: $BUILD_TAG" \
-                --description "${CHANGES}\n\n${BUILD_URL}" \
-                --pre-release
-            else
-              github-release edit \
-                --tag "${VERSION}" \
-                --name "$VERSION: $BUILD_TAG" \
-                --description "${CHANGES}\n\n${BUILD_URL}"
-            fi
-          '''
-        }
+  
       }
     }
   }
