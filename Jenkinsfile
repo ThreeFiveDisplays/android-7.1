@@ -30,7 +30,7 @@ node('docker && android-build') {
 
         export HOME=$WORKSPACE
         export USER=threefivedisplays-admin
-
+        git init
         rm -rf .repo/local_manifests
         git clone https://github.com/ThreeFiveDisplays/local_manifests -b nougat-7.1 .repo/local_manifests
         repo sync -j 20 -c --force-sync
