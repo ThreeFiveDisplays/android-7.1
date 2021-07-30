@@ -30,7 +30,7 @@ node('docker && android-build') {
 
         export HOME=$WORKSPACE
         export USER=threefivedisplays-admin
-        repo init -u https://android.googlesource.com/platform/manifest -b android-7.1.2_r11 --depth=1
+
         rm -rf .repo/local_manifests
         git clone https://github.com/ThreeFiveDisplays/local_manifests -b nougat-7.1 .repo/local_manifests
         repo sync -j 20 -c --force-sync
