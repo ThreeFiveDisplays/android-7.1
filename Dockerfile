@@ -17,4 +17,5 @@ RUN curl -L https://github.com/aktau/github-release/releases/download/v0.6.2/lin
 RUN which repo && \
     which github-release
 
+RUN sed -i 's/jdk.tls.disabledAlgorithms=SSLv3, TLSv1, TLSv1.1, RC4, DES, MD5withRSA, \/jdk.tls.disabledAlgorithms=SSLv3, RC4, DES, MD5withRSA, \/g' /etc/java-8-openjdk/java.security
 
