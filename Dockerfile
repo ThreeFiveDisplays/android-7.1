@@ -6,7 +6,7 @@ RUN apt-get update -y && \
     lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache \
     libgl1-mesa-dev libxml2-utils xsltproc unzip mtools u-boot-tools \
     htop iotop sysstat iftop pigz bc device-tree-compiler lunzip \
-    dosfstools git-lfs
+    dosfstools git-lfs sed
 
 RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo && \
     chmod +x /usr/local/bin/repo
