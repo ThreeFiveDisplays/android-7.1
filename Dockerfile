@@ -17,6 +17,5 @@ RUN curl -L https://github.com/aktau/github-release/releases/download/v0.6.2/lin
 RUN which repo && \
     which github-release
 
-RUN sed -i 's/TLSv1,/ /g' /etc/java-8-openjdk/java.security
-RUN sed -i 's/TLSv1.1,/ /g' /etc/java-8-openjdk/java.security
+
 
